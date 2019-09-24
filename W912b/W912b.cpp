@@ -106,7 +106,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    hInst = hInstance; // グローバル変数にインスタンス ハンドルを格納する
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+      512, 256, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -255,29 +255,69 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				break;
 
 			case ID_32796:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[0][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32797:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[1][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32798:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[2][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32799:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[3][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32800:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[4][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32801:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[5][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32802:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[6][numu][numr];
+					}
+				}
 				break;
 
 			case ID_32803:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = t1[7][numu][numr];
+					}
+				}
 				break;
-
+			
 
 
 			case ID_32791://重ねスケール
