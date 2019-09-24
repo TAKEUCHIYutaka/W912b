@@ -19,3 +19,9 @@
 
 
 // プログラムに必要な追加ヘッダーをここで参照してください
+#include<fstream>
+#include<limits.h>
+#include<shellapi.h>
+#include<commdlg.h>
+
+using namespace std;
