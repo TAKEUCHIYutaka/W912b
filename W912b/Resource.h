@@ -3,6 +3,7 @@
 // W912b.rc で使用
 //
 #define IDC_MYICON                      2
+#define IDD_FORMVIEW                    101
 #define IDD_W912B_DIALOG                102
 #define IDS_APP_TITLE                   103
 #define IDD_ABOUTBOX                    103
@@ -12,6 +13,7 @@
 #define IDI_SMALL                       108
 #define IDC_W912B                       109
 #define IDR_MAINFRAME                   128
+#define IDC_HOTKEY1                     1001
 #define ID_32771                        32771
 #define ID_32772                        32772
 #define ID_32773                        32773
@@ -46,6 +48,8 @@
 #define ID_32802                        32802
 #define ID_32803                        32803
 #define ID_32804                        32804
+#define ID_32805                        32805
+#define ID_32806                        32806
 #define IDC_STATIC                      -1
 
 // Next default values for new objects
@@ -54,8 +58,8 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        129
-#define _APS_NEXT_COMMAND_VALUE         32805
-#define _APS_NEXT_CONTROL_VALUE         1000
+#define _APS_NEXT_COMMAND_VALUE         32807
+#define _APS_NEXT_CONTROL_VALUE         1002
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

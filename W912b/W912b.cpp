@@ -9,13 +9,17 @@
 // グローバル変数:
 HINSTANCE hInst;                                // 現在のインターフェイス
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
-WCHAR szWindowClass[MAX_LOADSTRING];            // メイン ウィンドウ クラス名
+WCHAR szWindowClass[MAX_LOADSTRING];    // メイン ウィンドウ クラス名
 
+HWND hWnd, hDlg1, hDlg2;
+
+#define MAX_WIDTH       (4120)
+#define MAX_HEIGHT      (3120)
 
 LPCWSTR texting;
 const int Nu = 3120; const int Nr = 4208;
 int numu = 0; int numr = 0; int i = 0; int num = 0;
-double t1[8][Nu][Nr];
+double t1[7][Nu][Nr];
 unsigned int tem[8][Nu][Nr * 2];
 unsigned int c1[Nu][Nr];
 
@@ -23,7 +27,11 @@ unsigned int c1[Nu][Nr];
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK    Pict1Proc(HWND, UINT, WPARAM, LPARAM);
+LRESULT CALLBACK    Pict2Proc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -135,7 +143,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE:
 		DragAcceptFiles(hWnd, TRUE);
-		texting = TEXT("あと9ファイル取得できます。　現在0ファイル");
+		texting = TEXT("あと7ファイル取得できます。　現在0ファイル");
 		break;
 	
 	case WM_DROPFILES:
@@ -200,30 +208,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		numu = 0; numr = 0;
 		i++;
 		if (i == 1) {
-			texting = TEXT("あと8ファイル取得できます。現在1ファイル");
+			texting = TEXT("あと6ファイル取得できます。現在1ファイル");
 		}
 		else if (i == 2) {
-			texting = TEXT("あと7ファイル取得できます。現在2ファイル");
+			texting = TEXT("あと5ファイル取得できます。現在2ファイル");
 		}
 		else if (i == 3) {
-			texting = TEXT("あと6ファイル取得できます。現在3ファイル");
+			texting = TEXT("あと4ファイル取得できます。現在3ファイル");
 		}
 		else if (i == 4) {
-			texting = TEXT("あと5ファイル取得できます。現在4ファイル");
+			texting = TEXT("あと3ファイル取得できます。現在4ファイル");
 		}
 		else if (i == 5) {
-			texting = TEXT("あと4ファイル取得できます。現在5ファイル");
+			texting = TEXT("あと2ファイル取得できます。現在5ファイル");
 		}
 		else if (i == 6) {
-			texting = TEXT("あと3ファイル取得できます。現在6ファイル");
+			texting = TEXT("あと1ファイル取得できます。現在6ファイル");
 		}
+		
+		
+		
 		else if (i == 7) {
-			texting = TEXT("あと2ファイル取得できます。現在7ファイル");
-		}
-		
-		
-		else if (i == 8) {
-			texting = TEXT("ファイル取得が完了しました。現在8ファイル");
+			texting = TEXT("ファイル取得が完了しました。現在7ファイル");
 		}
 		InvalidateRect(hWnd, NULL, TRUE);
 		break;
@@ -246,7 +252,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						else if (i == 5) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr]) / 5; }
 						else if (i == 6) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr]) / 6; }
 						else if (i == 7) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr] + t1[6][numu][numr]) / 7; }
-						else if (i == 8) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr] + t1[6][numu][numr] + t1[7][numu][numr]) / 8; }
+						
 						
 					}
 				}
@@ -310,15 +316,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				break;
 
-			case ID_32803:
-				for (numu = 0; numu < Nu; ++numu) {
-					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[7][numu][numr];
-					}
-				}
-				break;
 			
-
+			
+			case ID_32806:
+				hDlg2=CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW),hWnd,(DLGPROC)Pict2Proc);
+				ShowWindow(hDlg2, SW_SHOW);
+				break;
 
 			case ID_32791://重ねスケール
 			{
@@ -469,6 +472,102 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
+}
+
+LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	static HBITMAP  hBitmap;    // ビットマップ
+	static HDC      hMemDC;     // オフスクリーン
+	static UINT     saveX;
+	static UINT     saveY;
+	static SCROLLINFO scrInfoH, scrInfoV;
+
+	switch (message)
+	{
+	
+	case WM_CLOSE:
+		DeleteDC(hMemDC);
+		DeleteObject(hBitmap);
+		DestroyWindow(hDlg2);
+		break;
+
+	case WM_INITDIALOG: 
+		HDC hDC;
+
+		// DCコンパチブルの作成
+		hDC = GetDC(hDlg2);
+		hMemDC = CreateCompatibleDC(hDC);
+		hBitmap = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+		SelectObject(hMemDC, hBitmap);
+		ReleaseDC(hDlg2, hDC);
+
+		for (numu = 0; numu < Nu; ++numu) {
+			for (numr = 0; numr < Nr; ++numr) {
+				SetPixel(hMemDC, numr, numu, RGB(c1[numu][numr], c1[numu][numr], c1[numu][numr]));
+			}
+		}
+
+
+		//横スクロールバー初期設定
+		scrInfoH.cbSize = sizeof(SCROLLINFO);
+		scrInfoH.fMask = SIF_DISABLENOSCROLL | SIF_POS | SIF_RANGE | SIF_PAGE;
+		scrInfoH.nMin = 0;
+		scrInfoH.nMax = Nr;
+		scrInfoH.nPage = 1;
+		scrInfoH.nPos = 0;
+		SetScrollInfo(hWnd, SB_HORZ, &scrInfoH, TRUE);
+
+		//縦スクロールバー初期設定
+		scrInfoV.cbSize = sizeof(SCROLLINFO);
+		scrInfoV.fMask = SIF_DISABLENOSCROLL | SIF_POS | SIF_RANGE | SIF_PAGE;
+		scrInfoV.nMin = 0;
+		scrInfoV.nMax = Nu;
+		scrInfoV.nPage = 1;
+		scrInfoV.nPos = 0;
+		SetScrollInfo(hWnd, SB_VERT, &scrInfoV, TRUE);
+	
+		break;
+	case WM_PAINT: 
+		PAINTSTRUCT     ps;
+		
+
+		// DCコンパチブルの描画
+		hDC = BeginPaint(hDlg2, &ps);
+		BitBlt(hDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hMemDC, scrInfoH.nPos, scrInfoV.nPos, SRCCOPY);
+		EndPaint(hDlg2, &ps);
+	
+		break;
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_RIGHT:
+			scrInfoH.nPos -= 10;
+			InvalidateRect(hDlg2, NULL, TRUE);
+			
+			break;
+		case VK_LEFT:
+			scrInfoH.nPos += 10;
+			InvalidateRect(hDlg2, NULL, TRUE);
+		
+			break;
+		case VK_UP:
+			scrInfoV.nPos += 10;
+			InvalidateRect(hDlg2, NULL, TRUE);
+		
+			break;
+		case VK_DOWN:
+			scrInfoV.nPos -= 10;
+			InvalidateRect(hDlg2, NULL, TRUE);
+		
+			break;
+		default:
+			break;
+		}
+
+	default:
+		return DefWindowProc(hDlg2, message, wParam, lParam);
+	}
+	return 0;
 }
 
 // バージョン情報ボックスのメッセージ ハンドラーです。
