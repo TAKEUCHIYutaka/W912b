@@ -316,7 +316,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 				break;
 
-			
+
+			case ID_32805:
+				hDlg1 = CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW), hWnd, (DLGPROC)Pict1Proc);
+				ShowWindow(hDlg1, SW_SHOW);
+				break;
 			
 			case ID_32806:
 				hDlg2=CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW),hWnd,(DLGPROC)Pict2Proc);
@@ -359,10 +363,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					{
 						for (numr = 0; numr < Nr; ++numr)
 						{
-							if (numu > 10 && numu < 16 && numr>30 && numr < 155) {
+							if (numu > 3100 && numu < 3106 && numr>4030 && numr < 4155) {
 								ofs << 0 << ' '; 
 							}
-							else if (numu > 15 && numu < 21 && numr>30 && numr < 155) {
+							else if (numu > 3105 && numu < 3111 && numr>4030 && numr < 4155) {
 								ofs << 255 << ' ';
 							}
 							else {
@@ -474,6 +478,121 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+
+LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	static HBITMAP  hBitmap;    // ビットマップ
+	static HDC      hMemDC;     // オフスクリーン
+	static UINT     saveX;
+	static UINT     saveY;
+	static SCROLLINFO scrInfoH, scrInfoV;
+
+	switch (message)
+	{
+
+	case WM_CLOSE:
+		DeleteDC(hMemDC);
+		DeleteObject(hBitmap);
+		DestroyWindow(hDlg1);
+		break;
+
+	case WM_INITDIALOG:
+		HDC hDC;
+
+		// DCコンパチブルの作成
+		hDC = GetDC(hDlg1);
+		hMemDC = CreateCompatibleDC(hDC);
+		hBitmap = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+		SelectObject(hMemDC, hBitmap);
+		ReleaseDC(hDlg1, hDC);
+
+		for (numu = 0; numu < Nu; ++numu) {
+			for (numr = 0; numr < Nr; ++numr) {
+
+
+				if (numu > 3100 && numu < 3106 && numr>3930 && numr < 4056) {
+					SetPixel(hMemDC, numr, numu, RGB(0,0,0));
+				
+				}
+				else if (numu > 3105 && numu < 3111 && numr>3930 && numr < 4056) {
+					SetPixel(hMemDC, numr, numu, RGB(255,255,255));
+				}
+				else {
+					SetPixel(hMemDC, numr, numu, RGB(c1[numu][numr], c1[numu][numr], c1[numu][numr]));
+				}
+			}
+		}
+
+
+		//横スクロールバー初期設定
+		scrInfoH.cbSize = sizeof(SCROLLINFO);
+		scrInfoH.fMask = SIF_DISABLENOSCROLL | SIF_POS | SIF_RANGE | SIF_PAGE;
+		scrInfoH.nMin = 0;
+		scrInfoH.nMax = Nr;
+		scrInfoH.nPage = 1;
+		scrInfoH.nPos = 0;
+		SetScrollInfo(hWnd, SB_HORZ, &scrInfoH, TRUE);
+
+		//縦スクロールバー初期設定
+		scrInfoV.cbSize = sizeof(SCROLLINFO);
+		scrInfoV.fMask = SIF_DISABLENOSCROLL | SIF_POS | SIF_RANGE | SIF_PAGE;
+		scrInfoV.nMin = 0;
+		scrInfoV.nMax = Nu;
+		scrInfoV.nPage = 1;
+		scrInfoV.nPos = 0;
+		SetScrollInfo(hWnd, SB_VERT, &scrInfoV, TRUE);
+
+		break;
+	case WM_PAINT:
+		PAINTSTRUCT     ps;
+
+
+		// DCコンパチブルの描画
+		hDC = BeginPaint(hDlg1, &ps);
+		BitBlt(hDC, 0, 0, MAX_WIDTH, MAX_HEIGHT, hMemDC, scrInfoH.nPos, scrInfoV.nPos, SRCCOPY);
+		EndPaint(hDlg1, &ps);
+
+		break;
+	case WM_SIZE:
+		scrInfoV.nPos = 0;
+		scrInfoH.nPos = 0;
+		InvalidateRect(hDlg1, NULL, TRUE);
+		break;
+	case WM_KEYDOWN:
+		switch (wParam)
+		{
+		case VK_RIGHT:
+			scrInfoH.nPos += 10;
+			InvalidateRect(hDlg1, NULL, TRUE);
+
+			break;
+		case VK_LEFT:
+			scrInfoH.nPos -= 10;
+			InvalidateRect(hDlg1, NULL, TRUE);
+
+			break;
+		case VK_UP:
+			scrInfoV.nPos -= 10;
+			InvalidateRect(hDlg1, NULL, TRUE);
+
+			break;
+		case VK_DOWN:
+			scrInfoV.nPos += 10;
+			InvalidateRect(hDlg1, NULL, TRUE);
+
+			break;
+		default:
+			break;
+		}
+
+	default:
+		return DefWindowProc(hDlg1, message, wParam, lParam);
+	}
+	return 0;
+}
+
+
+
 LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static HBITMAP  hBitmap;    // ビットマップ
@@ -537,26 +656,31 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		EndPaint(hDlg2, &ps);
 	
 		break;
+	case WM_SIZE:
+		scrInfoV.nPos = 0;
+		scrInfoH.nPos = 0;
+		InvalidateRect(hDlg2, NULL, TRUE);
+		break;
 	case WM_KEYDOWN:
 		switch (wParam)
 		{
 		case VK_RIGHT:
-			scrInfoH.nPos -= 10;
+			scrInfoH.nPos += 10;
 			InvalidateRect(hDlg2, NULL, TRUE);
 			
 			break;
 		case VK_LEFT:
-			scrInfoH.nPos += 10;
+			scrInfoH.nPos -= 10;
 			InvalidateRect(hDlg2, NULL, TRUE);
 		
 			break;
 		case VK_UP:
-			scrInfoV.nPos += 10;
+			scrInfoV.nPos -= 10;
 			InvalidateRect(hDlg2, NULL, TRUE);
 		
 			break;
 		case VK_DOWN:
-			scrInfoV.nPos -= 10;
+			scrInfoV.nPos += 10;
 			InvalidateRect(hDlg2, NULL, TRUE);
 		
 			break;
