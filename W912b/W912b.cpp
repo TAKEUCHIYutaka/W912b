@@ -16,6 +16,8 @@ HWND hWnd, hDlg1, hDlg2;
 #define MAX_WIDTH       (4120)
 #define MAX_HEIGHT      (3120)
 
+
+
 LPCWSTR texting;
 const int Nu = 3120; const int Nr = 4208;
 int numu = 0; int numr = 0; int i = 0; int num = 0;
@@ -318,12 +320,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 
 			case ID_32805:
-				hDlg1 = CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW), hWnd, (DLGPROC)Pict1Proc);
+				texting = TEXT("表示準備中です。");
+				InvalidateRect(hWnd, NULL, TRUE);
+				UpdateWindow(hWnd);
+				
+				
+
+				hDlg1 = CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW), hWnd, (DLGPROC)Pict1Proc,);
+
+
 				ShowWindow(hDlg1, SW_SHOW);
 				break;
 			
 			case ID_32806:
+				texting = TEXT("表示準備中です。");
+				InvalidateRect(hWnd, NULL, TRUE);
+				UpdateWindow(hWnd);
+
 				hDlg2=CreateDialog(hInst, MAKEINTRESOURCE(IDD_FORMVIEW),hWnd,(DLGPROC)Pict2Proc);
+
+
+				
+
 				ShowWindow(hDlg2, SW_SHOW);
 				break;
 
@@ -351,6 +369,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					MessageBox(hWnd, szFile, TEXT("ファイル名を付けて保存"), MB_OK);
 				}
 
+
+				texting = TEXT("保存中です。");
+				InvalidateRect(hWnd, NULL, TRUE);
+				UpdateWindow(hWnd);
 
 
 				fstream file;
@@ -390,8 +412,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case ID_32792://重ねノンスケ
 
-				texting = TEXT("保存を開始しています。");
-				InvalidateRect(hWnd, NULL, TRUE);
 
 				static OPENFILENAME     ofn;
 				static TCHAR        szPath[MAX_PATH];
@@ -415,7 +435,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					MessageBox(hWnd, szFile, TEXT("ファイル名を付けて保存"), MB_OK);
 
 				}
-
+				texting = TEXT("保存中です。");
+				InvalidateRect(hWnd, NULL, TRUE);
+				UpdateWindow(hWnd);
 
 				{
 					fstream file;
@@ -487,6 +509,7 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 	static UINT     saveY;
 	static SCROLLINFO scrInfoH, scrInfoV;
 
+
 	switch (message)
 	{
 
@@ -497,7 +520,9 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 		break;
 
 	case WM_INITDIALOG:
+		
 		HDC hDC;
+
 
 		// DCコンパチブルの作成
 		hDC = GetDC(hDlg1);
@@ -541,6 +566,11 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 		scrInfoV.nPage = 1;
 		scrInfoV.nPos = 0;
 		SetScrollInfo(hWnd, SB_VERT, &scrInfoV, TRUE);
+
+
+
+		texting = TEXT("表示しました。");
+		InvalidateRect(hWnd, NULL, TRUE);
 
 		break;
 	case WM_PAINT:
@@ -601,6 +631,7 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 	static UINT     saveY;
 	static SCROLLINFO scrInfoH, scrInfoV;
 
+
 	switch (message)
 	{
 	
@@ -611,7 +642,9 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		break;
 
 	case WM_INITDIALOG: 
+		
 		HDC hDC;
+
 
 		// DCコンパチブルの作成
 		hDC = GetDC(hDlg2);
@@ -645,6 +678,11 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		scrInfoV.nPos = 0;
 		SetScrollInfo(hWnd, SB_VERT, &scrInfoV, TRUE);
 	
+
+
+		texting = TEXT("表示しました。");
+		InvalidateRect(hWnd, NULL, TRUE);
+
 		break;
 	case WM_PAINT: 
 		PAINTSTRUCT     ps;
