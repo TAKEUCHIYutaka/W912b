@@ -22,7 +22,7 @@ LPCWSTR texting;
 const int Nu = 3120; const int Nr = 4208;
 int numu = 0; int numr = 0; int i = 0; int num = 0;
 double t1[7][Nu][Nr];
-unsigned int tem[8][Nu][Nr * 2];
+unsigned int tem[8][Nu][Nr];
 unsigned int c1[Nu][Nr];
 
 // このコード モジュールに含まれる関数の宣言を転送します:
@@ -187,7 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					tem[i][numu][numr] = bufa[k];
 					++numr;
-					if (numr == (Nr + Nr)) {
+					if (numr == (Nr)) {
 						numr = 0;
 						++numu;
 					}
@@ -198,7 +198,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (numu = 0; numu < Nu; ++numu) {
 			for (numr = 0; numr < Nr; ++numr) {
-				t1[i][numu][numr] = (tem[i][numu][numr * 2] + tem[i][numu][(numr * 2) + 1] * 256) / 4;
+				t1[i][numu][numr] = tem[i][numu][numr];
 
 			}
 		}
