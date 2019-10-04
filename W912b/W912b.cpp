@@ -586,6 +586,8 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_SIZE:
 		scrInfoV.nPos = 0;
 		scrInfoH.nPos = 0;
+		SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
+		SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 		InvalidateRect(hDlg1, NULL, TRUE);
 		break;
 	case WM_KEYDOWN:
@@ -593,21 +595,25 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 		{
 		case VK_RIGHT:
 			scrInfoH.nPos += 10;
+			SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_LEFT:
 			scrInfoH.nPos -= 10;
+			SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_UP:
 			scrInfoV.nPos -= 10;
+			SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_DOWN:
 			scrInfoV.nPos += 10;
+			SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
