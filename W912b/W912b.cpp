@@ -24,7 +24,7 @@ int numu = 0; int numr = 0; int i = 0; int num = 0;
 double t1[7][Nu][Nr];
 unsigned int tem[8][Nu][Nr * 2];
 unsigned int c1[Nu][Nr];
-
+unsigned char c2[Nu][Nr];
 // このコード モジュールに含まれる関数の宣言を転送します:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
@@ -360,8 +360,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					ofn.lpstrInitialDir = szPath;       // 初期フォルダ位置
 					ofn.lpstrFile = szFile;       // 選択ファイル格納
 					ofn.nMaxFile = MAX_PATH;
-					ofn.lpstrDefExt = TEXT(".pgm");
-					ofn.lpstrFilter = TEXT("pgmファイル(*.pgm)\0*.pgm\0");
+					ofn.lpstrDefExt = TEXT(".bin");
+					ofn.lpstrFilter = TEXT("binファイル(*..bin)\0*.bin\0");
 					ofn.lpstrTitle = TEXT("画像を保存します。");
 					ofn.Flags = OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
 				}
@@ -377,8 +377,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				fstream file;
 				ofstream ofs(szFile);
-
-				ofs << "P2\n#4208x3120\n4208 3120\n255\n";
 
 				if (ofs) {
 					for (numu = 0; numu < Nu; ++numu)
@@ -426,8 +424,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					ofn.lpstrInitialDir = szPath;       // 初期フォルダ位置
 					ofn.lpstrFile = szFile;       // 選択ファイル格納
 					ofn.nMaxFile = MAX_PATH;
-					ofn.lpstrDefExt = TEXT(".pgm");
-					ofn.lpstrFilter = TEXT("pgmファイル(*.pgm)\0*.pgm\0");
+					ofn.lpstrDefExt = TEXT(".bin");
+					ofn.lpstrFilter = TEXT("binファイル(*.bin)\0*.bin\0");
 					ofn.lpstrTitle = TEXT("画像を保存します。");
 					ofn.Flags = OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
 				}
@@ -443,22 +441,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					fstream file;
 					ofstream ofs(szFile);
 
-					ofs << "P2\n#4208x3120\n4208 3120\n255\n";
-
 					if (ofs) {
 						for (numu = 0; numu < 3120; ++numu)
 						{
 
 							for (numr = 0; numr < Nr; ++numr)
 							{
-								ofs << c1[numu][numr] << ' '; 
-								if (numr == 4207)
-								{
-									ofs << "\n";
-
-
-
-								}
+								c2[numu][numr] = c1[numu][numr];
+								ofs << c2[numu][numr]; ofs << 00000000;
 							}
 						}
 
@@ -586,6 +576,8 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 	case WM_SIZE:
 		scrInfoV.nPos = 0;
 		scrInfoH.nPos = 0;
+		SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
+		SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 		InvalidateRect(hDlg1, NULL, TRUE);
 		break;
 	case WM_KEYDOWN:
@@ -593,21 +585,25 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 		{
 		case VK_RIGHT:
 			scrInfoH.nPos += 10;
+			SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_LEFT:
 			scrInfoH.nPos -= 10;
+			SetScrollInfo(hDlg1, SB_HORZ, &scrInfoH, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_UP:
 			scrInfoV.nPos -= 10;
+			SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
 		case VK_DOWN:
 			scrInfoV.nPos += 10;
+			SetScrollInfo(hDlg1, SB_VERT, &scrInfoV, TRUE);
 			InvalidateRect(hDlg1, NULL, TRUE);
 
 			break;
