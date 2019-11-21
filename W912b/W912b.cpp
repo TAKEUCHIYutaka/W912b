@@ -19,8 +19,10 @@ HWND hWnd, hDlg1, hDlg2;
 
 
 LPCWSTR texting;
+WCHAR bufF[256];
 const int Nu = 3120; const int Nr = 4208;
-int numu = 0; int numr = 0; int i = 0; int num = 0;
+int numu = 0; int numr = 0; int i = 0; int num = 0; int maxE = 0;
+
 double t1[7][Nu][Nr];
 unsigned int tem[8][Nu][Nr * 2];
 unsigned int c1[Nu][Nr];
@@ -198,7 +200,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (numu = 0; numu < Nu; ++numu) {
 			for (numr = 0; numr < Nr; ++numr) {
-				t1[i][numu][numr] = (tem[i][numu][numr * 2] + tem[i][numu][(numr * 2) + 1] * 256) / 4;
+				t1[i][numu][numr] = (tem[i][numu][numr * 2] + (tem[i][numu][(numr * 2) + 1]<<8))>>2;
 
 			}
 		}
@@ -248,12 +250,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
 						if (i == 1) { c1[numu][numr] = t1[0][numu][numr]; }
-						else if (i == 2) {c1[numu][numr] =(t1[0][numu][numr] + t1[1][numu][numr])/2;}
-						else if (i == 3) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr]) / 3; }
-						else if (i == 4) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr]) / 4; }
-						else if (i == 5) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr]) / 5; }
-						else if (i == 6) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr]) / 6; }
-						else if (i == 7) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr] + t1[6][numu][numr]) / 7; }
+						else if (i == 2) {c1[numu][numr] =(t1[0][numu][numr] + t1[1][numu][numr]);}
+						else if (i == 3) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr]); }
+						else if (i == 4) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr]); }
+						else if (i == 5) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr]); }
+						else if (i == 6) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr]); }
+						else if (i == 7) { c1[numu][numr] = (t1[0][numu][numr] + t1[1][numu][numr] + t1[2][numu][numr] + t1[3][numu][numr] + t1[4][numu][numr] + t1[5][numu][numr] + t1[6][numu][numr]); }
 						
 						
 					}
@@ -343,6 +345,37 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				
 
 				ShowWindow(hDlg2, SW_SHOW);
+				break;
+
+			case ID_32807:
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						if (c1[numu][numr] > maxE) {
+							maxE = c1[numu][numr];
+						}
+					}
+				}
+
+				wsprintf(bufF,TEXT("%d"),maxE);
+				MessageBox(hWnd, bufF, TEXT("最大値"), MB_OK);
+
+				maxE=maxE / 16;
+
+
+
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						if (c1[numu][numr] < 110) {
+							c1[numu][numr] = 0;
+						}
+						else 
+						{
+							c1[numu][numr] = c1[numu][numr] * 16;
+							c1[numu][numr] = c1[numu][numr] / maxE;
+						}
+					}
+				}
+				MessageBox(hWnd, TEXT("でけた"), TEXT("確認"), MB_OK);
 				break;
 
 			case ID_32791://重ねスケール
