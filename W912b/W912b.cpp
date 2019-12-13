@@ -21,7 +21,7 @@ HWND hWnd, hDlg1, hDlg2;
 LPCWSTR texting;
 WCHAR bufF[256];
 const int Nu = 3120; const int Nr = 4208;
-int numu = 0; int numr = 0; int i = 0; int num = 0; int maxE = 0;
+int numu = 0; int numr = 0; int i = 0; int num = 0; int maxE = 0; int th = 0;
 
 double t1[7][Nu][Nr];
 unsigned int tem[8][Nu][Nr * 2];
@@ -200,7 +200,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (numu = 0; numu < Nu; ++numu) {
 			for (numr = 0; numr < Nr; ++numr) {
-				t1[i][numu][numr] = (tem[i][numu][numr * 2] + (tem[i][numu][(numr * 2) + 1]<<8))>>2;
+				t1[i][numu][numr] = (tem[i][numu][numr * 2] + (tem[i][numu][(numr * 2) + 1]<<8));
 
 			}
 		}
@@ -260,14 +260,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						
 					}
 				}
-				texting = TEXT("画像データが作成されました。");
+				texting = TEXT("編集用画像を作成しました。");
 				InvalidateRect(hWnd, NULL, TRUE);
 				break;
 
 			case ID_32796:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[0][numu][numr];
+						c2[numu][numr] = t1[0][numu][numr]/4;
 					}
 				}
 				break;
@@ -275,7 +275,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32797:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[1][numu][numr];
+						c2[numu][numr] = t1[1][numu][numr]/4;
 					}
 				}
 				break;
@@ -283,7 +283,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32798:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[2][numu][numr];
+						c2[numu][numr] = t1[2][numu][numr]/4;
 					}
 				}
 				break;
@@ -291,7 +291,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32799:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[3][numu][numr];
+						c2[numu][numr] = t1[3][numu][numr]/4;
 					}
 				}
 				break;
@@ -299,7 +299,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32800:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[4][numu][numr];
+						c2[numu][numr] = t1[4][numu][numr]/4;
 					}
 				}
 				break;
@@ -307,7 +307,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32801:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[5][numu][numr];
+						c2[numu][numr] = t1[5][numu][numr]/4;
 					}
 				}
 				break;
@@ -315,7 +315,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32802:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[6][numu][numr];
+						c2[numu][numr] = t1[6][numu][numr]/4;
 					}
 				}
 				break;
@@ -347,7 +347,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				ShowWindow(hDlg2, SW_SHOW);
 				break;
 
-			case ID_32807:
+			case ID_32812://最大値告知
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
 						if (c1[numu][numr] > maxE) {
@@ -356,26 +356,92 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					}
 				}
 
-				wsprintf(bufF,TEXT("%d"),maxE);
+				wsprintf(bufF,TEXT("最大値は%dです。"),maxE);
 				MessageBox(hWnd, bufF, TEXT("最大値"), MB_OK);
+				break;
+			
 
-				maxE=maxE / 16;
-
-
+				
+			case ID_32807://fanc
+				
+				
 
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						if (c1[numu][numr] < 110) {
+						if (c1[numu][numr] < th) {
 							c1[numu][numr] = 0;
 						}
-						else 
-						{
-							c1[numu][numr] = c1[numu][numr] * 16;
-							c1[numu][numr] = c1[numu][numr] / maxE;
-						}
+						
 					}
 				}
-				MessageBox(hWnd, TEXT("でけた"), TEXT("確認"), MB_OK);
+				
+				//maxE >> 4;
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						
+							c1[numu][numr] = c1[numu][numr] << 8;
+							c1[numu][numr] = c1[numu][numr] / maxE;
+						
+					}
+				}
+
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c2[numu][numr] = c1[numu][numr];
+					}
+				}
+
+				maxE = 0;
+				break;
+
+			case ID_32808://thr+100
+
+				th = th + 100;
+				
+			
+				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
+				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
+				break;
+
+			case ID_32809://thr+50
+
+				th = th + 50;
+
+
+				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
+				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
+				break;
+			case ID_32810://thr+10
+
+				th = th + 10;
+
+
+				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
+				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
+				break;
+			case ID_32811://thr+5
+
+				th = th + 5;
+
+
+				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
+				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
+				break;
+
+
+
+			case ID_32813://C
+
+				maxE = 0;
+				th = 0;
+
+				for (numu = 0; numu < Nu; ++numu) {
+					for (numr = 0; numr < Nr; ++numr) {
+						c1[numu][numr] = 0;
+						c2[numu][numr] = 0;
+					}
+				}
+
 				break;
 
 			case ID_32791://重ねスケール
@@ -423,7 +489,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								ofs << 255 << ' ';
 							}
 							else {
-								ofs << c1[numu][numr] << ' '; 
+								ofs << c2[numu][numr] << ' '; 
 								if (numr == 4207)
 								{
 									ofs << "\n";
@@ -566,7 +632,7 @@ LRESULT CALLBACK Pict1Proc(HWND hDlg1, UINT message, WPARAM wParam, LPARAM lPara
 					SetPixel(hMemDC, numr, numu, RGB(255,255,255));
 				}
 				else {
-					SetPixel(hMemDC, numr, numu, RGB(c1[numu][numr], c1[numu][numr], c1[numu][numr]));
+					SetPixel(hMemDC, numr, numu, RGB(c2[numu][numr], c2[numu][numr], c2[numu][numr]));
 				}
 			}
 		}
@@ -684,7 +750,7 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 
 		for (numu = 0; numu < Nu; ++numu) {
 			for (numr = 0; numr < Nr; ++numr) {
-				SetPixel(hMemDC, numr, numu, RGB(c1[numu][numr], c1[numu][numr], c1[numu][numr]));
+				SetPixel(hMemDC, numr, numu, RGB(c2[numu][numr], c2[numu][numr], c2[numu][numr]));
 			}
 		}
 
