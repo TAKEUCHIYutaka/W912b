@@ -11,7 +11,7 @@ HINSTANCE hInst;                                // 現在のインターフェ�
 WCHAR szTitle[MAX_LOADSTRING];                  // タイトル バーのテキスト
 WCHAR szWindowClass[MAX_LOADSTRING];    // メイン ウィンドウ クラス名
 
-HWND hWnd, hDlg1, hDlg2;
+static HWND hWnd, hDlg1, hDlg2;
 
 #define MAX_WIDTH       (4120)
 #define MAX_HEIGHT      (3120)
@@ -34,6 +34,7 @@ LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK    Pict1Proc(HWND, UINT, WPARAM, LPARAM);
 LRESULT CALLBACK    Pict2Proc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
 
 
 
@@ -141,6 +142,11 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //  WM_DESTROY  - 中止メッセージを表示して戻る
 //
 //
+
+
+
+
+
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
@@ -392,6 +398,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 
 				maxE = 0;
+
+				texting = TEXT("表示用画像を作成しました。");
+				InvalidateRect(hWnd, NULL, TRUE);
 				break;
 
 			case ID_32808://thr+100
@@ -441,7 +450,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 						c2[numu][numr] = 0;
 					}
 				}
-
+				texting = TEXT("編集済み画像をクリアしました。");
+				InvalidateRect(hWnd, NULL, TRUE);
 				break;
 
 			case ID_32791://重ねスケール
@@ -482,7 +492,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					{
 						for (numr = 0; numr < Nr; ++numr)
 						{
-							if (numu > 3100 && numu < 3106 && numr>4030 && numr < 4155) {
+							if ((numu % 100 == 0) && (numr == 1)) {
+								wsprintf(bufF, TEXT("3120中%d完了"), numu);
+								texting = bufF;
+								InvalidateRect(hWnd, NULL, FALSE);
+								UpdateWindow(hWnd);
+							}
+							else if (numu > 3100 && numu < 3106 && numr>4030 && numr < 4155) {
 								ofs << 0 << ' '; 
 							}
 							else if (numu > 3105 && numu < 3111 && numr>4030 && numr < 4155) {
@@ -541,13 +557,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					ofstream ofs(szFile);
 
 					if (ofs) {
-						for (numu = 0; numu < 3120; ++numu)
+						for (numu = 0; numu < Nu; ++numu)
 						{
 
 							for (numr = 0; numr < Nr; ++numr)
 							{
 								c2[numu][numr] = c1[numu][numr];
 								ofs << c2[numu][numr]; ofs << 00000000;
+								if((numu%100==0)&&(numr == 1)) {
+									wsprintf(bufF, TEXT("3120中%d完了"), numu);
+									texting = bufF;
+										InvalidateRect(hWnd, NULL, FALSE);
+										UpdateWindow(hWnd);
+								}
 							}
 						}
 
@@ -741,20 +763,6 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		HDC hDC;
 
 
-		// DCコンパチブルの作成
-		hDC = GetDC(hDlg2);
-		hMemDC = CreateCompatibleDC(hDC);
-		hBitmap = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
-		SelectObject(hMemDC, hBitmap);
-		ReleaseDC(hDlg2, hDC);
-
-		for (numu = 0; numu < Nu; ++numu) {
-			for (numr = 0; numr < Nr; ++numr) {
-				SetPixel(hMemDC, numr, numu, RGB(c2[numu][numr], c2[numu][numr], c2[numu][numr]));
-			}
-		}
-
-
 		//横スクロールバー初期設定
 		scrInfoH.cbSize = sizeof(SCROLLINFO);
 		scrInfoH.fMask = SIF_DISABLENOSCROLL | SIF_POS | SIF_RANGE | SIF_PAGE;
@@ -772,13 +780,51 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		scrInfoV.nPage = 1;
 		scrInfoV.nPos = 0;
 		SetScrollInfo(hWnd, SB_VERT, &scrInfoV, TRUE);
-	
 
+		// DCコンパチブルの作成
+		hDC = GetDC(hDlg2);
+		hMemDC = CreateCompatibleDC(hDC);
+		hBitmap = CreateCompatibleBitmap(hDC, MAX_WIDTH, MAX_HEIGHT);
+		SelectObject(hMemDC, hBitmap);
+		ReleaseDC(hDlg2, hDC);
+		
+			for (numu = 0; numu < Nu; ++numu) {
 
+				/*if (numu % 100 == 0) {
+					Sleep(500);
+					wsprintf(bufF, TEXT("%d/3120"), numu);
+					texting = bufF;
+					InvalidateRect(hWnd, NULL, TRUE);
+					UpdateWindow(hWnd);
+					Sleep(500);
+				}*/
+
+				for (numr = 0; numr < Nr; ++numr) {
+
+					SetPixel(hMemDC, numr, numu, RGB(c2[numu][numr], c2[numu][numr], c2[numu][numr]));
+					if ((numu % 100 == 0) && (numr == 1)) {
+
+						wsprintf(bufF, TEXT("%d/3120"), numu);
+						texting = bufF;
+						
+						Sleep(500);
+						InvalidateRect(hWnd, NULL, TRUE);
+						UpdateWindow(hWnd);
+						Sleep(500);
+					}
+
+				}
+			}
+		
+		
 		texting = TEXT("表示しました。");
 		InvalidateRect(hWnd, NULL, TRUE);
 
+
+	
 		break;
+
+
 	case WM_PAINT: 
 		PAINTSTRUCT     ps;
 		
@@ -826,6 +872,13 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	return 0;
 }
+
+
+
+
+
+
+
 
 // バージョン情報ボックスのメッセージ ハンドラーです。
 INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
