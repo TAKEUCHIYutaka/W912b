@@ -523,7 +523,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								ofs << 255 << ' ';
 							}
 							else {
-								
+								c1[numu][numr] / 4;
 								ofs << c1[numu][numr] << ' '; 
 								if (numr == 4207)
 								{
