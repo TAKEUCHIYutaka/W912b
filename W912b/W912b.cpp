@@ -273,7 +273,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32796:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[0][numu][numr]/4;
+						c1[numu][numr] = t1[0][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -281,7 +282,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32797:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[1][numu][numr]/4;
+						c1[numu][numr] = t1[1][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -289,7 +291,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32798:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[2][numu][numr]/4;
+						c1[numu][numr] = t1[2][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -297,7 +300,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32799:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[3][numu][numr]/4;
+						c1[numu][numr] = t1[3][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -305,7 +309,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32800:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[4][numu][numr]/4;
+						c1[numu][numr] = t1[4][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -313,7 +318,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32801:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[5][numu][numr]/4;
+						c1[numu][numr] = t1[5][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -321,7 +327,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32802:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c2[numu][numr] = t1[6][numu][numr]/4;
+						c1[numu][numr] = t1[6][numu][numr]/4;
+						c2[numu][numr] = c1[numu][numr];
 					}
 				}
 				break;
@@ -436,6 +443,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
 				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
 				break;
+			case ID_32814://thr+500
+
+				th = th + 500;
+
+
+				wsprintf(bufF, TEXT("閾値を%dに設定しました。"), th);
+				MessageBox(hWnd, bufF, TEXT("threshold"), MB_OK);
+				break;
 
 
 
@@ -469,8 +484,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					ofn.lpstrInitialDir = szPath;       // 初期フォルダ位置
 					ofn.lpstrFile = szFile;       // 選択ファイル格納
 					ofn.nMaxFile = MAX_PATH;
-					ofn.lpstrDefExt = TEXT(".bin");
-					ofn.lpstrFilter = TEXT("binファイル(*..bin)\0*.bin\0");
+					ofn.lpstrDefExt = TEXT(".ppm");
+					ofn.lpstrFilter = TEXT("ppmファイル(*..ppm)\0*.ppm\0");
 					ofn.lpstrTitle = TEXT("画像を保存します。");
 					ofn.Flags = OFN_FILEMUSTEXIST | OFN_OVERWRITEPROMPT;
 				}
@@ -486,6 +501,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				fstream file;
 				ofstream ofs(szFile);
+
+
+				ofs << "P2\n#4208x3120\n4208 3120\n255\n";
 
 				if (ofs) {
 					for (numu = 0; numu < Nu; ++numu)
@@ -505,7 +523,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								ofs << 255 << ' ';
 							}
 							else {
-								ofs << c2[numu][numr] << ' '; 
+								
+								ofs << c1[numu][numr] << ' '; 
 								if (numr == 4207)
 								{
 									ofs << "\n";
@@ -790,29 +809,10 @@ LRESULT CALLBACK Pict2Proc(HWND hDlg2, UINT message, WPARAM wParam, LPARAM lPara
 		
 			for (numu = 0; numu < Nu; ++numu) {
 
-				/*if (numu % 100 == 0) {
-					Sleep(500);
-					wsprintf(bufF, TEXT("%d/3120"), numu);
-					texting = bufF;
-					InvalidateRect(hWnd, NULL, TRUE);
-					UpdateWindow(hWnd);
-					Sleep(500);
-				}*/
-
 				for (numr = 0; numr < Nr; ++numr) {
 
 					SetPixel(hMemDC, numr, numu, RGB(c2[numu][numr], c2[numu][numr], c2[numu][numr]));
-					if ((numu % 100 == 0) && (numr == 1)) {
-
-						wsprintf(bufF, TEXT("%d/3120"), numu);
-						texting = bufF;
-						
-						Sleep(500);
-						InvalidateRect(hWnd, NULL, TRUE);
-						UpdateWindow(hWnd);
-						Sleep(500);
-					}
-
+					
 				}
 			}
 		
