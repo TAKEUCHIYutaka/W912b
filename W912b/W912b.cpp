@@ -24,7 +24,7 @@ const int Nu = 3120; const int Nr = 4208;
 int numu = 0; int numr = 0; int i = 0; int num = 0; int maxE = 0; int th = 0;
 
 double t1[7][Nu][Nr];
-unsigned int tem[8][Nu][Nr * 2];
+unsigned int tem[8][Nu][Nr];
 unsigned int c1[Nu][Nr];
 unsigned char c2[Nu][Nr];
 // このコード モジュールに含まれる関数の宣言を転送します:
@@ -195,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 					tem[i][numu][numr] = bufa[k];
 					++numr;
-					if (numr == (Nr + Nr)) {
+					if (numr == Nr) {
 						numr = 0;
 						++numu;
 					}
@@ -206,7 +206,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		for (numu = 0; numu < Nu; ++numu) {
 			for (numr = 0; numr < Nr; ++numr) {
-				t1[i][numu][numr] = (tem[i][numu][numr * 2] + (tem[i][numu][(numr * 2) + 1]<<8));
+				t1[i][numu][numr] = tem[i][numu][numr];
 
 			}
 		}
@@ -273,7 +273,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32796:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[0][numu][numr]/4;
+						c1[numu][numr] = t1[0][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -282,7 +282,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32797:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[1][numu][numr]/4;
+						c1[numu][numr] = t1[1][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -291,7 +291,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32798:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[2][numu][numr]/4;
+						c1[numu][numr] = t1[2][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -300,7 +300,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32799:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[3][numu][numr]/4;
+						c1[numu][numr] = t1[3][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -309,7 +309,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32800:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[4][numu][numr]/4;
+						c1[numu][numr] = t1[4][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -318,7 +318,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32801:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[5][numu][numr]/4;
+						c1[numu][numr] = t1[5][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -327,7 +327,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case ID_32802:
 				for (numu = 0; numu < Nu; ++numu) {
 					for (numr = 0; numr < Nr; ++numr) {
-						c1[numu][numr] = t1[6][numu][numr]/4;
+						c1[numu][numr] = t1[6][numu][numr];
 						c2[numu][numr] = c1[numu][numr];
 					}
 				}
@@ -523,7 +523,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 								ofs << 255 << ' ';
 							}
 							else {
-								c1[numu][numr] / 4;
+								c1[numu][numr] /4;
 								ofs << c1[numu][numr] << ' '; 
 								if (numr == 4207)
 								{
@@ -582,7 +582,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 							for (numr = 0; numr < Nr; ++numr)
 							{
 								c2[numu][numr] = c1[numu][numr];
-								ofs << c2[numu][numr]; ofs << 00000000;
+								ofs << c2[numu][numr]; 
 								if((numu%100==0)&&(numr == 1)) {
 									wsprintf(bufF, TEXT("3120中%d完了"), numu);
 									texting = bufF;
